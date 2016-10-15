@@ -1,57 +1,36 @@
-# gameofrooms.rb
 
-class Room
-	attr_accessor :desc, :door
-	def initialize (desc,door)
-		@desc = desc
-		@door = door		
+class Game
+	attr_accessor :player, :maze
+	def initialize(player,maze)
+		@player = player
+		@maze = maze
 	end
 
-end
-
-r1 = Room.new("You are in the 1 room.", "E")  
-r2 = Room.new("You are in room num 2. Its cold!", "S")
-r3 = Room.new("You are in room num 3. Its worm!", "E")
-r4 = Room.new("You are in room num 4. You are doing good!", "E")
-r5 = Room.new("You are in room num 5. Last step!", "N")
-
-# r1.desc = "ola"
-# print r1.desc
-
-array_rooms = [r1,r2,r3,r4,r5]
-
-# puts array_rooms
-
-#print array_rooms
-
-
-class Game 
-	def printDescAndDoor (room)
+	def print_desc_and_door (room)
 		puts "#{room.desc} The exit is in the #{room.door}"
 	end
 
-	def askNextStep 
+	def ask_next_step 
 		puts "Which direction you chose? \n > "
 		decision = gets.chomp
 	end
 
-	def checkExit? (dec,room)
-		if dec == room.door
-			return true
-		else
-			return false
-		end
+	def check_exit? (dec,room)
+		dec == room.door
 	end
 
-	def play (array)
-		array.each do |room|
-			avanza = false
-			while avanza == false
-				printDescAndDoor (room)
-				decision = askNextStep
-				avanza = checkExit?(decision,room)
-				if avanza == false	
-					puts "Youuuuu foool. You stay in this room."
+	def play
+		maze.each do |room|
+			foward = false
+			while foward == false
+				print_desc_and_door (room)
+				decision = ask_next_step
+				foward = check_exit?(decision,room)
+				if foward == false	
+					puts "Foool. You stay here and you loose one life"
+					player.lifes -=1
+					puts "One life less, you have #{player.lifes}"
+					player.check_if_dead
 				end
 			end		
 		end
@@ -59,10 +38,42 @@ class Game
 	end
 end
 
-game = Game.new
+class Room
+	attr_accessor :desc, :door
+	def initialize (desc,door)
+		@desc = desc
+		@door = door		
+	end
+end
 
-game.play(array_rooms)
+class Player
+	attr_accessor :lifes, :position
+	def initialize (lifes, position)
+		@lifes = lifes
+		@position = position
+	end
 
-# printdesc (array_rooms)
+	def check_if_dead
+		if lifes < 1
+			puts "GAME OVER"
+			false
+		end
+	end
+
+end
+
+pablo = Player.new(3,1)
+
+r1 = Room.new("You are in the 1 room.", "E")  
+r2 = Room.new("You are in room num 2. Its cold!", "S")
+r3 = Room.new("You are in room num 3. Its worm!", "E")
+r4 = Room.new("You are in room num 4. You are doing a good job!", "E")
+r5 = Room.new("You are in room num 5. Last step!", "N")
+
+array_rooms = [r1,r2,r3,r4,r5]
+
+game = Game.new(pablo,array_rooms)
+
+game.play
 
 
