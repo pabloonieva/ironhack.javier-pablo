@@ -1,4 +1,3 @@
-
 class Game
 	attr_accessor :player, :maze
 	def initialize(player,maze)
@@ -20,21 +19,25 @@ class Game
 	end
 
 	def play
-		maze.each do |room|
+		@maze.each do |room|
 			foward = false
-			while foward == false
+			while foward == false && @player.check_if_dead == false
+				@player.check_if_dead
 				print_desc_and_door (room)
 				decision = ask_next_step
 				foward = check_exit?(decision,room)
-				if foward == false	
+				if foward == false 	
 					puts "Foool. You stay here and you loose one life"
-					player.lifes -=1
-					puts "One life less, you have #{player.lifes}"
-					player.check_if_dead
+					@player.lifes -=1
+					puts "One life less, you have #{@player.lifes} \n"
 				end
-			end		
+			end	
 		end
-		puts "Finish!!"
+		if @player.lifes > 0
+			puts "FINNISH CRACK"
+		else
+			puts "GAME OVER"
+		end
 	end
 end
 
@@ -54,10 +57,7 @@ class Player
 	end
 
 	def check_if_dead
-		if lifes < 1
-			puts "GAME OVER"
-			false
-		end
+		@lifes == 0 	
 	end
 
 end
@@ -75,5 +75,3 @@ array_rooms = [r1,r2,r3,r4,r5]
 game = Game.new(pablo,array_rooms)
 
 game.play
-
-
